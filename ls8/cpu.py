@@ -12,7 +12,7 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
-        self.ram = [0] * 8
+        self.ram = [None] * 256
         self.reg = [0] * 8
         self.pc = 0
 
@@ -22,26 +22,47 @@ class CPU:
     def ram_write(self, ram_index, ram_val):
         self.ram[ram_index] = ram_val
 
-    def load(self):
+    def load(self, filename):
         """Load a program into memory."""
 
         address = 0
 
+        try:
+            with open(filename) as f:
+                for line in f:
+
+                    # ignore comments
+                    comment_split = line.split('#')
+
+                    # remove whitespace
+                    num = comment_split[0].strip()
+
+                    # ignore empty lines
+                    if num == '':
+                        continue
+
+                    val = int(num, 2)
+                    self.ram[address] = val
+                    address += 1
+        except FileNotFoundError:
+            print("File not found")
+            sys.exit(2)
+
         # For now, we've just hardcoded a program:
 
-        program = [
-            # From print8.ls8
-            0b10000010,  # LDI R0,8
-            0b00000000,
-            0b00001000,
-            0b01000111,  # PRN R0
-            0b00000000,
-            0b00000001,  # HLT
-        ]
+        # program = [
+        #     # From print8.ls8
+        #     0b10000010,  # LDI R0,8
+        #     0b00000000,
+        #     0b00001000,
+        #     0b01000111,  # PRN R0
+        #     0b00000000,
+        #     0b00000001,  # HLT
+        # ]
 
-        for instruction in program:
-            self.ram[address] = instruction
-            address += 1
+        # for instruction in program:
+        #     self.ram[address] = instruction
+        #     address += 1
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -102,7 +123,13 @@ class CPU:
 
 cpu = CPU()
 
-cpu.load()
+if len(sys.argv) != 2:
+    print("Usage: cpu.py filename")
+    sys.exit(1)
+
+filename = sys.argv[1]
+
+cpu.load(filename)
 cpu.run()
 # cpu.trace()
 # for i in range(0, 8):
