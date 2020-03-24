@@ -5,6 +5,7 @@ import sys
 LDI = 130
 PRN = 71
 HLT = 1
+MUL = 162
 
 
 class CPU:
@@ -105,7 +106,7 @@ class CPU:
                 val = self.ram_read(self.pc + 2)
                 self.ram_write(index, val)
                 self.pc += 3
-                print(f"LDI -- index: {index}, val: {val}, pc: {self.pc}")
+                # print(f"LDI -- index: {index}, val: {val}, pc: {self.pc}")
 
             elif command == PRN:
                 index = self.ram_read(self.pc + 1)
@@ -113,6 +114,14 @@ class CPU:
                 # print(f"pc at PRN start: {self.pc}")
                 # print(f"pc + 1 at PRN start: {self.pc + 1}")
                 self.pc += 2
+
+            elif command == MUL:
+                index_one = self.ram_read(self.pc + 1)
+                index_two = self.ram_read(self.pc + 2)
+                start_val = self.ram_read(index_one)
+                mul_val = self.ram_read(index_two)
+                self.ram_write(index_one, start_val * mul_val)
+                self.pc += 3
 
             elif command == HLT:
                 running = False
@@ -132,5 +141,5 @@ filename = sys.argv[1]
 cpu.load(filename)
 cpu.run()
 # cpu.trace()
-# for i in range(0, 8):
+# for i in range(0, 12):
 #     print(f"i: {i}, ram at i: {cpu.ram[i]}")
