@@ -6,6 +6,10 @@ LDI = 130
 PRN = 71
 HLT = 1
 MUL = 162
+PUSH = 69
+POP = 70
+
+SP = 7
 
 
 class CPU:
@@ -104,13 +108,13 @@ class CPU:
             if command == LDI:
                 index = self.ram_read(self.pc + 1)
                 val = self.ram_read(self.pc + 2)
-                self.ram_write(index, val)
+                self.reg[index] = val
                 self.pc += 3
                 # print(f"LDI -- index: {index}, val: {val}, pc: {self.pc}")
 
             elif command == PRN:
                 index = self.ram_read(self.pc + 1)
-                print(self.ram_read(index))
+                print(self.reg[index])
                 # print(f"pc at PRN start: {self.pc}")
                 # print(f"pc + 1 at PRN start: {self.pc + 1}")
                 self.pc += 2
@@ -122,6 +126,20 @@ class CPU:
                 mul_val = self.ram_read(index_two)
                 self.ram_write(index_one, start_val * mul_val)
                 self.pc += 3
+
+            elif command == PUSH:
+                index = self.ram_read(self.pc + 1)
+                value = self.reg[index]
+                self.reg[SP] -= 1
+                self.ram_write(self.reg[SP], value)
+                self.pc += 2
+
+            elif command == POP:
+                index = self.ram_read(self.pc + 1)
+                value = self.ram_read(self.reg[SP])
+                self.reg[index] = value
+                self.reg[SP] += 1
+                self.pc += 2
 
             elif command == HLT:
                 running = False
