@@ -8,6 +8,9 @@ HLT = 1
 MUL = 162
 PUSH = 69
 POP = 70
+CALL = 80
+ADD = 160
+RET = 17
 
 SP = 7
 
@@ -140,6 +143,34 @@ class CPU:
                 self.reg[index] = value
                 self.reg[SP] += 1
                 self.pc += 2
+
+            elif command == CALL:
+                # print("Starting CALL")
+                # print(f"Initial pc: {self.pc}")
+                call_index = self.ram_read(self.pc + 1)
+                routine_index = self.reg[call_index]
+                stack_index = self.pc + 2
+                # print(f"Call index: {call_index}")
+                # print(f"Stack index: {stack_index}")
+                self.reg[SP] -= 1
+                self.ram_write(self.reg[SP], stack_index)
+                self.pc = routine_index
+                # print(f"Final pc: {self.pc}")
+
+            elif command == RET:
+                # print("Starting RET")
+                ret_index = self.ram_read(self.reg[SP])
+                self.reg[SP] += 1
+                self.pc = ret_index
+
+            elif command == ADD:
+                # print("Starting ADD")
+                reg_a = self.ram_read(self.pc + 1)
+                reg_b = self.ram_read(self.pc + 2)
+                val_a = self.reg[reg_a]
+                val_b = self.reg[reg_b]
+                self.reg[reg_a] = val_a + val_b
+                self.pc += 3
 
             elif command == HLT:
                 running = False
