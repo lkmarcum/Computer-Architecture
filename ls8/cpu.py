@@ -13,6 +13,7 @@ ADD = 160
 RET = 17
 CMP = 167
 JMP = 84
+JEQ = 85
 
 SP = 7
 E = None
@@ -200,6 +201,12 @@ class CPU:
                 reg = self.ram_read(self.pc + 1)
                 target_index = self.reg[reg]
                 self.pc = target_index
+
+            elif command == JEQ:
+                if E == 1:
+                    reg = self.ram_read(self.pc + 1)
+                    target_index = self.reg[reg]
+                    self.pc = target_index
 
             elif command == HLT:
                 running = False
