@@ -14,11 +14,12 @@ RET = 17
 CMP = 167
 JMP = 84
 JEQ = 85
+JNE = 86
 
 SP = 7
-E = None
-L = None
-G = None
+E = 0
+L = 0
+G = 0
 
 
 class CPU:
@@ -204,6 +205,12 @@ class CPU:
 
             elif command == JEQ:
                 if E == 1:
+                    reg = self.ram_read(self.pc + 1)
+                    target_index = self.reg[reg]
+                    self.pc = target_index
+
+            elif command == JNE:
+                if E == 0:
                     reg = self.ram_read(self.pc + 1)
                     target_index = self.reg[reg]
                     self.pc = target_index
