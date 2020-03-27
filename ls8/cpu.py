@@ -180,6 +180,7 @@ class CPU:
                 self.pc += 3
 
             elif command == CMP:
+                # print(f"Starting CMP")
                 reg_a = self.ram_read(self.pc + 1)
                 reg_b = self.ram_read(self.pc + 2)
                 val_a = self.reg[reg_a]
@@ -199,21 +200,28 @@ class CPU:
                 self.pc += 3
 
             elif command == JMP:
+                # print(f"Starting JMP")
                 reg = self.ram_read(self.pc + 1)
                 target_index = self.reg[reg]
                 self.pc = target_index
 
             elif command == JEQ:
+                # print(f"Starting JEQ")
                 if E == 1:
                     reg = self.ram_read(self.pc + 1)
                     target_index = self.reg[reg]
                     self.pc = target_index
+                else:
+                    self.pc += 2
 
             elif command == JNE:
+                # print(f"Starting JNE")
                 if E == 0:
                     reg = self.ram_read(self.pc + 1)
                     target_index = self.reg[reg]
                     self.pc = target_index
+                else:
+                    self.pc += 2
 
             elif command == HLT:
                 running = False
