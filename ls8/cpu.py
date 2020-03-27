@@ -196,6 +196,11 @@ class CPU:
                     G = 0
                 self.pc += 3
 
+            elif command == JMP:
+                reg = self.ram_read(self.pc + 1)
+                target_index = self.reg[reg]
+                self.pc = target_index
+
             elif command == HLT:
                 running = False
 
