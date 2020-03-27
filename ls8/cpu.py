@@ -11,8 +11,13 @@ POP = 70
 CALL = 80
 ADD = 160
 RET = 17
+CMP = 167
+JMP = 84
 
 SP = 7
+E = None
+L = None
+G = None
 
 
 class CPU:
@@ -170,6 +175,25 @@ class CPU:
                 val_a = self.reg[reg_a]
                 val_b = self.reg[reg_b]
                 self.reg[reg_a] = val_a + val_b
+                self.pc += 3
+
+            elif command == CMP:
+                reg_a = self.ram_read(self.pc + 1)
+                reg_b = self.ram_read(self.pc + 2)
+                val_a = self.reg[reg_a]
+                val_b = self.reg[reg_b]
+                if val_a == val_b:
+                    E = 1
+                    L = 0
+                    G = 0
+                elif val_a > val_b:
+                    E = 0
+                    L = 0
+                    G = 1
+                elif val_a < val_b:
+                    E = 0
+                    L = 1
+                    G = 0
                 self.pc += 3
 
             elif command == HLT:
